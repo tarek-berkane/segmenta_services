@@ -1,0 +1,38 @@
+{% extends "template.html" %}
+{% load static %}
+
+{% block css_link %}
+    <link rel="stylesheet" href="{% static 'css/vendor/tabler.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/website.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="page">
+    {% block header %}
+        {% include "_partial/full_header.html" %}
+    {% endblock header %}
+
+    <div class="page-wrapper">
+        {% block page %}
+        {% block page_header %}{% endblock %}
+        <div class="page-body">
+            {% block page_body %}
+            {% endblock %}
+            {% block footer %}
+            {% include '_partial/footer.html' %}
+            {% endblock %}
+        </div>
+        {% endblock %}
+    </div>
+</div>
+{% block model %}
+{% endblock model %}
+
+
+{% endblock body %}
+
+
+{% block js %}
+<script src="{% static 'js/tabler.min.js' %}"></script>
+<script src="{% static 'js/website.js' %}"></script>
+{% endblock %}

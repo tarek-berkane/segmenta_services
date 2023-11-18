@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{{page_description}}">
+        <title>{{page_title}}</title>
+
+        {% block meta_content %}
+        {% endblock meta_content %}
+
+        {% block favicon %}
+        {% endblock favicon %}
+
+        {% block css_link %}
+        {% endblock css_link %}
+
+        {% block extra_css_link %}
+        {% endblock extra_css_link %}
+
+        {% block css_style %}
+        {% endblock css_style %}
+    </head>
+
+
+    <body >
+        {% block body %}{% endblock body %}
+        {% block models %}{% endblock %}
+        {% block js %}{% endblock js %}
+        {% block extra_js %}{% endblock extra_js %}
+    </body>
+
+</html>

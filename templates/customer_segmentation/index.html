@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css_link %}
+  <link rel="stylesheet" href="{% static 'css/vendor/apexcharts.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/vendor/filepond.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/vendor/filepond-plugin-image-preview.min.css' %}" />
+{% endblock %}
+
+{% block header %}
+  <header class="navbar navbar-expand-md d-print-none bg-white">
+    <div class="container-xl">
+      <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <a href="" class="d-flex justify-content-center align-items-center">
+          <img src="{% static 'images/logo.png' %}" width="110" height="32" alt="Tabler" class="navbar-brand-image" />
+          <span class="fs-2 ms-2">Customer Segmentation</span>
+        </a>
+      </h1>
+    </div>
+  </header>
+{% endblock %}
+
+{% block page_body %}
+  <div class="container-xl">
+    <div class="card mb-2">
+      <div class="card-body">
+        <h3 class="card-title">Basic Usage</h3>
+        <form class="dropzone dz-clickable" id="dropzone-default" action="" method="post" autocomplete="off" novalidate="">
+          {% csrf_token %}
+          <input type="file" name="file" />
+          <div class="d-flex justify-content-end">
+            <input type="submit" class="btn btn-primary" value="Run forcasting" accept=".csv" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div id="chart" class="chart-lg"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/filepond-plugin-file-validate-type.min.js' %}"></script>
+  <script src="{% static 'js/filepond.js' %}"></script>
+  <script src="{% static 'js/apexcharts.min.js' %}"></script>
+
+  <script>
+    FilePond.registerPlugin(FilePondPluginFileValidateType)
+    FilePond.create(document.querySelector('input[type=file]'), {
+      acceptedFileTypes: ['text/csv'],
+      server: {
+        url: "{% url 'website:upload-file' %}",
+        headers: {
+          'X-CSRFTOKEN': '{{ csrf_token }}'
+        }
+      }
+    })
+  </script>
+  {% if data %}
+  <script>
+    var options = {
+      series: [
+          {% for cluster_id, cluster  in data.items %}
+          {name: 'SAMPLE {{cluster_id}}',
+          data: {{cluster}}},
+          {% endfor %}
+      ],
+      chart: {
+        height: 350,
+        type: 'scatter',
+        zoom: {
+          enabled: true,
+          type: 'xy'
+        }
+      },
+      xaxis: {
+        tickAmount: 10,
+        labels: {
+          formatter: function (val) {
+            return parseFloat(val).toFixed(1)
+          }
+        }
+      },
+      yaxis: {
+        tickAmount: 7
+      }
+    }
+    
+    var chart = new ApexCharts(document.querySelector('#chart'), options)
+    chart.render()
+  </script>
+  {% endif %}
+{% endblock %}
